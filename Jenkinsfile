@@ -16,7 +16,11 @@ pipeline {
 
         stage('Trivy Scan') {
            steps {
-               sh 'docker run --rm aquasec/trivy:latest image blog:latest'
+               sh '''
+               docker run --rm \
+                 -v /var/run/docker.sock:/var/run/docker.sock \
+                 aquasec/trivy:latest image blog:latest
+              '''
            }
         }
 
