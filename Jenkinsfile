@@ -14,6 +14,12 @@ pipeline {
             }
         }
 
+        stage('Trivy Scan') {
+           steps {
+               sh 'docker run --rm aquasec/trivy:latest image blog:latest'
+           }
+        }
+
         stage('Run') {
             steps {
                 sh 'docker stop blog || true'
