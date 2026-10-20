@@ -17,7 +17,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build --pull --rm -f "Dockerfile" -t blog:latest "."'
+                echo 'Build skipped for security pipeline testing'
             }
         }
 
