@@ -31,6 +31,13 @@ pipeline {
                 sh 'docker run -d -p 3000:3000 --name blog blog'
             }
         }
+
+        stage('Nikto Scan') {
+           steps {
+               sh 'docker run --rm ghcr.io/sullo/nikto:latest -h 
+        http://host.docker.internal:3000'
+            }
+        }
     }
 }
 
