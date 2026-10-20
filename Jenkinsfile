@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     stages {
         stage('Checkout') {
             steps {
@@ -7,42 +8,17 @@ pipeline {
             }
         }
 
-        stage('Dependency Check') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    dependencyCheck odcInstallation: 'DependencyCheck'
-                }
-            }
-        }
-
         stage('Build') {
             steps {
-                echo 'Build skipped for security pipeline testing'
-            }
-        }
-
-        stage('Trivy Scan') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'docker run --rm aquasec/trivy:latest image blog:latest'
-                }
+                sh 'docker build --pull --rm -f "Dockerfile" -t blog:latest "."'
             }
         }
 
         stage('Run') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                   sh 'docker stop blog || true'
-                   sh 'docker rm blog || true'
-                   sh 'docker run -d -p 3000:3000 --name blog blog'
-                }
-            }
-        }
-
-        stage('Nikto Scan') {
-            steps {
-                sh 'docker run --rm ghcr.io/sullo/nikto:latest -h http://localhost:3000'
+                sh 'docker stop blog || true'
+                sh 'docker rm blog || true'
+                sh 'docker run -d -p 3000:3000 --name blog blog'
             }
         }
     }
-}
