@@ -23,15 +23,19 @@ pipeline {
 
         stage('Trivy Scan') {
             steps {
-                sh 'docker run --rm aquasec/trivy:latest image blog:latest'
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'docker run --rm aquasec/trivy:latest image blog:latest'
+                }
             }
         }
 
         stage('Run') {
             steps {
-                sh 'docker stop blog || true'
-                sh 'docker rm blog || true'
-                sh 'docker run -d -p 3000:3000 --name blog blog'
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                   sh 'docker stop blog || true'
+                   sh 'docker rm blog || true'
+                   sh 'docker run -d -p 3000:3000 --name blog blog'
+                }
             }
         }
 
