@@ -8,6 +8,14 @@ pipeline {
             }
         }
 
+        stage('Dependency Check') {
+           steps {
+               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                   dependencyCheck odcInstallation: 'DependencyCheck'
+                }
+           }
+        }
+
         stage('Build') {
             steps {
                 sh 'docker build --pull --rm -f "Dockerfile" -t blog:latest "."'
