@@ -23,7 +23,7 @@ pipeline {
 
         stage('Trivy Scan') {
             steps {
-                sh 'trivy image blog:latest'
+                sh 'docker run --rm aquasec/trivy:latest image blog:latest'
             }
         }
 
@@ -37,7 +37,7 @@ pipeline {
 
         stage('Nikto Scan') {
             steps {
-                sh 'nikto -h http://localhost:3000'
+                sh 'docker run --rm ghcr.io/sullo/nikto:latest -h http://localhost:3000'
             }
         }
     }
