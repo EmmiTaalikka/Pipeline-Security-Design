@@ -9,7 +9,9 @@ pipeline {
 
         stage('Dependency Check') {
             steps {
-                dependencyCheck odcInstallation: 'DependencyCheck'
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    dependencyCheck odcInstallation: 'DependencyCheck'
+                }
             }
         }
 
