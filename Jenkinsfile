@@ -22,6 +22,12 @@ pipeline {
             }
         }
 
+        stage('Unit Tests') {
+            steps {
+                sh 'docker run --rm -v $(pwd):/app -w /app node:20-alpine npm test'
+            }
+        }
+
         stage('Trivy Scan') {
            steps {
                sh '''
