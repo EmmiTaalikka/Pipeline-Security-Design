@@ -9,12 +9,19 @@ pipeline {
         }
 
         stage('Dependency Check') {
-           steps {
-               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                   dependencyCheck odcInstallation: 'DependencyCheck'
-                }
-           }
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    withCredentials([
+                        string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')
+                     ]) {
+                        dependencyCheck(
+                            odcInstallation: 'DependencyCheck',
+                            additionalArguments: "--nvdApiKey ${NVD_API_KEY}"
+                )
+            }
         }
+    }
+}
 
         stage('Build') {
             steps {
